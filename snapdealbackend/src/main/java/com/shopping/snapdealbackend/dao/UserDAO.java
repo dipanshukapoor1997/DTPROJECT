@@ -2,29 +2,15 @@ package com.shopping.snapdealbackend.dao;
 
 import java.util.List;
 
-import com.shopping.snapdealbackend.model.User;
+import com.shopping.snapdealbackend.dto.User;
 
 
-public interface UserDAO {
+
+
+public interface UserDao {
 	
-	// get all users
-	public List<User> getAllUsers();
+	boolean registerUser(User product);
+	User getUserById(String id);
 	
-	// create user
-	public boolean createUser(User user);
-	
-	// update user
-	public boolean updateUser(User user);
-	
-	// delete user
-	public boolean deleteUser(User user);
-	
-	// get user by id
-	public User getUserByID(int id);
-	
-	// get user by name
-	public User getUserByName(String name);
-	
-	// validate the user
-	public User validateUser(int id, String password);
 }
+

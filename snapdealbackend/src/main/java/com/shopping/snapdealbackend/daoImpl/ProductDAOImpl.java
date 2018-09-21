@@ -1,98 +1,136 @@
-package com.shopping.snapdealbackend.daoImpl;
+package com.shopping.snapdealbackend.daoimpl;
+
+
 
 import java.util.List;
 
-import javax.transaction.Transactional;
+import javax.persistence.TypedQuery;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.shopping.snapdealbackend.dao.ProductDAO;
-import com.shopping.snapdealbackend.model.Product;
+import com.shopping.snapdealbackend.dao.ProductDao;
+import com.shopping.snapdealbackend.dto.Product;
 
-@Transactional
-@Repository("productDAO")
-public class ProductDAOImpl implements ProductDAO {
+
+
+
+
+@Repository("productDao")
+public class ProductDaoImpl implements ProductDao {
+
 	@Autowired
 	private SessionFactory sessionFactory;
+
 	
-	public ProductDAOImpl(SessionFactory sessionFactory)
-	{
-		this.sessionFactory=sessionFactory;
-	}
-	@SuppressWarnings("unchecked")
-	public List<Product> getAllProducts() 
-	{
-	return	sessionFactory.getCurrentSession().createQuery("from Product").list();
-	}
-
-	public boolean createProduct(Product product) 
-	{
-		try {
-			sessionFactory.getCurrentSession().save(product);
-			return true;
-			}
-		catch (Exception e)
-		{
-		
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	public boolean updateProduct(Product product) {
-		try {
-			sessionFactory.getCurrentSession().update(product);
-			return true;
-			}
-		catch (Exception e)
-		{
-		
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	public boolean deleteProduct(Product product) {
-		try {
-			sessionFactory.getCurrentSession().delete(product);
-			return true;
-			}
-		catch (Exception e)
-		{
-		
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	public Product getProductByID(int id) {
-		return (Product) sessionFactory.getCurrentSession().createQuery("from Product where id='"+id+"'").uniqueResult();
-	}
-
-	public Product getProductByName(String name) {
-		return (Product) sessionFactory.getCurrentSession().createQuery("from Product where name='"+name+"'").list().get(0);
+	public Session getSession(){
+		return sessionFactory.getCurrentSession();
 	}
 	
 	@Transactional
-	public List<Product> navproduct(int id) {
-		String hql = "from Product where category_id= " + id;
-		@SuppressWarnings("rawtypes")
-		Query query = sessionFactory.getCurrentSession().createQuery(hql);
-		@SuppressWarnings("unchecked")
-		List<Product> catproduct = (List<Product>) query.list();
-		return catproduct;
-	}
-	
-		@Transactional
-		@SuppressWarnings("unchecked")
-		public List<Product> getproduct(int id) {
-			String hql="from Product where id= "+id;
-			@SuppressWarnings("rawtypes")
-			Query query = sessionFactory.getCurrentSession().createQuery(hql);
-			List<Product> listProduct = (List<Product>) query.list();
-			return listProduct;
+	public boolean insertProduct(Product product) {
+		try {
+			sessionFactory.getCurrentSession().saveOrUpdate(product);
+			return true;
+		}
+		catch(Exception e){
+			System.out.println(e);
+			return false;
+			
 		}
 	}
+
+	@Transactional
+	public boolean updateProduct(Product product) {
+		Session session=getSession();
+		
+		
+		session.update(product);
+		return true;
+	}
+
+	@Transactional
+	public boolean deleteProduct(int productId) {
+		Session session=getSession();
+		Product product=session.get(Product.class, productId);
+		product.setStatus("Deactive");
+		session.update(product);
+		return true;
+	}
+
+	@Transactional
+	public Product getProductById(int productId) {
+		Product product=getSession().get(Product.class, productId);
+		return product;
+	}
+
+	
+	@Transactional
+	public List<Product> getProducts() {
+		System.out.println("getPRoducts 1");
+		@SuppressWarnings("unchecked")
+		TypedQuery<Product> query=
+		getSession().createQuery("from com.shopping.snapdealbackend.dto.Product where status='Active'");
+		System.out.println("getPRoducts 2");
+		List<Product> list=query.getResultList();
+		System.out.println("getPRoducts 3");
+		System.out.println("List of Products : "+list);
+		return list;
+		
+	}
+
+	
+	@Transactional
+	public List<Product> getProducts(String category) {
+		@SuppressWarnings("unchecked")
+		TypedQuery<Product> query=getSession().createQuery("from com.shopping.snapdealbackend.dto.Product where category.categoryName=:a");
+		query.setParameter("a",category);
+		List<Product> list=query.getResultList();
+		System.out.println("List of Products : "+list);
+		return list;
+	}
+
+	
+	@Transactional
+	public int getQuantity(int productId) {
+		@SuppressWarnings("unchecked")
+		TypedQuery<Product> query=getSession().createQuery("from com.shopping.snapdealbackend.dto.Product where productId=:a");
+		query.setParameter("a",productId);
+		List<Product> list=query.getResultList();
+		return list.get(0).getQuantity();
+	}
+
+
+	@Transactional
+	public void updateQuantity(int productId, int newQuantity) {
+		@SuppressWarnings("unchecked")
+		TypedQuery<Product> query=getSession().createQuery("update com.shopping.snapdealbackend.dto.Product set quantity=quantity-:b where productId=:a");
+		query.setParameter("b",newQuantity);
+		query.setParameter("a",productId);
+		query.executeUpdate();
+		
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

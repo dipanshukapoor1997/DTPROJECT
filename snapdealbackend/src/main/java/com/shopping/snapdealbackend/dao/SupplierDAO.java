@@ -2,26 +2,16 @@ package com.shopping.snapdealbackend.dao;
 
 import java.util.List;
 
-import com.shopping.snapdealbackend.model.Supplier;
+import com.shopping.snapdealbackend.dto.Supplier;
 
 
-public interface SupplierDAO {
+
+
+public interface SupplierDao {
 	
-		// get all suppliers
-		public List<Supplier> getAllSuppliers();
-		
-		// create supplier
-		public boolean createSupplier(Supplier supplier);
-		
-		// update supplier
-		public boolean updateSupplier(Supplier supplier);
-		
-		// delete supplier
-		public boolean deleteSupplier(Supplier supplier);
-		
-		// get supplier by id
-		public Supplier getSupplierByID(int id);
-		
-		// get supplier by name
-		public Supplier getSupplierByName(String name);
+	boolean insertSupp(Supplier supplier);
+	boolean updateSupp(Supplier supplier);
+	boolean deleteSupp(int supplierId);
+	public Supplier getSupplierById(int supplierId);
+	public List<Supplier> listSuppliers();
 }

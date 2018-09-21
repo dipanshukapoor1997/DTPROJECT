@@ -2,30 +2,16 @@ package com.shopping.snapdealbackend.dao;
 
 import java.util.List;
 
-import com.shopping.snapdealbackend.model.Category;
+import com.shopping.snapdealbackend.dto.Category;
 
 
-public interface CategoryDAO {
 
-	// declare the methods related to CRUD Operations
 
-	// access_specifier return_type method_name(parameter_list) throws exception_list
-
-	// get all categories
-	public List<Category> getAllCategories();
-
-	// create category
-	public boolean createCategory(Category category);
-
-	// update category
-	public boolean updateCategory(Category category);
-
-	// delete category
-	public boolean deleteCategory(Category category);
+public interface CategoryDao {
 	
-	// get category by id
-	public Category getCategoryByID(int id);
-
-	// get category by name
-	public Category getCategoryByName(String name);
+	boolean insertCategory(Category category);
+	boolean updateCategory(Category category);
+	boolean deleteCategory(int categoryId);
+	public Category getCategoryById(int categoryId);
+	public List<Category> listCategories();
 }

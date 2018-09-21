@@ -1,29 +1,9 @@
 package com.shopping.snapdealbackend.dao;
 
-import java.util.List;
-
-import com.shopping.snapdealbackend.model.Cart;
+import com.shopping.snapdealbackend.dto.Cart;
 
 public interface CartDAO {
-	public List<Cart> list();
-
-	public boolean save(Cart cart);
-
-	public boolean update(Cart cart);
-
-	public boolean delete(Cart cart);
-
-	public List<Cart> get(int userid);
-	
-	public Cart getitem(int cartId);
-
-	public Cart getproduct(int id,int userid);
-	
-	//public Cart getproduct(int cartid);
-
-	public long cartsize(int userId);
-
-	public long CartPrice(int userId);
-
-	public void pay(int userId);
+	boolean addCart(Cart cart);
+	Cart getCartByCustomer(String customerId);
+	boolean deleteCart(int cartId);
 }

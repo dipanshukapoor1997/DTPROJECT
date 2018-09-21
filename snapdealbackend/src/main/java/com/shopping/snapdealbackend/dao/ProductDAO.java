@@ -2,24 +2,24 @@ package com.shopping.snapdealbackend.dao;
 
 import java.util.List;
 
-import com.shopping.snapdealbackend.model.Product;
+import com.shopping.snapdealbackend.dto.Product;
 
 
-public interface ProductDAO {
+
+public interface ProductDao {
 	
-public List<Product> getAllProducts();
+	boolean insertProduct(Product product);
+	boolean updateProduct(Product product);
+	boolean deleteProduct(int productId);
+	public Product getProductById(int productId);
+	List<Product> getProducts();
+	List<Product> getProducts(String category);
 	
-	public boolean createProduct(Product product);
+	int getQuantity(int productId);
+	void updateQuantity(int productId,int newQuantity);
 	
-	public boolean updateProduct(Product product);
 	
-	public boolean deleteProduct(Product product);
-	
-	public Product getProductByID(int id);
-	
-	public Product getProductByName(String name);
-	
-	public List<Product> navproduct(int id);
-	
-	public List<Product> getproduct(int id);
+
 }
+
+

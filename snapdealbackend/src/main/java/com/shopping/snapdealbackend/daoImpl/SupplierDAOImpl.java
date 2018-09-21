@@ -1,109 +1,82 @@
-package com.shopping.snapdealbackend.daoImpl;
+package com.shopping.snapdealbackend.daoimpl;
+
+
 
 import java.util.List;
 
-import javax.transaction.Transactional;
+import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.shopping.snapdealbackend.dao.SupplierDAO;
-import com.shopping.snapdealbackend.model.Supplier;
+import com.shopping.snapdealbackend.dao.SupplierDao;
+import com.shopping.snapdealbackend.dto.Supplier;
 
 
+
+
+@Repository("supplierDao")
 @Transactional
-@Repository("supplierDAO")
-public class SupplierDAOImpl implements SupplierDAO {
-	
-	private static final Logger log = LoggerFactory.getLogger(SupplierDAOImpl.class);
-	
-	@Autowired 
-	private SessionFactory sessionFactory;
+public class SupplierDaoImpl implements SupplierDao {
 
-	public SupplierDAOImpl(SessionFactory sessionFactory) {
+	@Autowired
+	private SessionFactory sessionFactory;
 	
-		log.info("Supplier Session");
-		this.sessionFactory = sessionFactory;
-	}
-	
-	public Session getSession()
-	{
+	public Session getSession(){
 		return sessionFactory.getCurrentSession();
 	}
-
-	@Transactional
-	@SuppressWarnings("unchecked")
-	public List<Supplier> getAllSuppliers() {
-		
-		log.debug("Body of the method getAllSuppliers");
-		return	getSession().createQuery("from Supplier").list();
-	}
-
-	@Transactional
-	public boolean createSupplier(Supplier supplier) {
-		log.debug("Starting of the method createSupplier");
-		try
-		{
-		getSession().save(supplier);
-		log.debug("Ending of the method createSupplier");
-		return true;
-		} catch(Exception e)
-		{
-			e.printStackTrace(); 
-			log.error("Exception occurred while creating supplier");
-			log.error(e.getMessage());
-			return false;
-		}	
-	}
-
-	@Transactional
-	public boolean updateSupplier(Supplier supplier) {
-		
-		log.debug("Starting of the method updateSupplier");
-		try {
-			getSession().update(supplier);
-			log.debug("Ending of the method updateSupplier");
-			return true;
-		} 
-		catch (Exception e) {
-			e.printStackTrace();
-			log.error("Exception occurred while updating supplier");
-			log.error(e.getMessage());
-			return false;
-		}
-	}
-
-	@Transactional
-	public boolean deleteSupplier(Supplier supplier) {
-
-		log.debug("Starting of the method deleteSupplier");
-		try {
-			getSession().delete(supplier);
-			log.debug("Ending of the method deleteSupplier");
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.error("Exception occurred while deleting supplier");
-			log.error(e.getMessage());
-			return false;
-		}
-	}
-
-	@Transactional
-	public Supplier getSupplierByID(int id) {
 	
-		log.debug("Body of the methpd getSupplierByID");
-		return (Supplier) sessionFactory.getCurrentSession().get(Supplier.class, id);
+	public boolean insertSupp(Supplier supplier) {
+		System.out.println("I m Here...");
+		try {
+			getSession().persist(supplier);
+			return true;
+		}
+		catch(Exception e){
+			System.out.println(e);
+			return false;
+			
+		}
+		
 	}
 
-	@Transactional
-	public Supplier getSupplierByName(String name) {
-		
-		log.debug("Body of the method getSupplierByName");
-		return (Supplier) sessionFactory.getCurrentSession().createQuery("from Supplier where name ='"+name+"'").list().get(0);
+	public Supplier getSupplierById(int supplierId){
+		return getSession().get(Supplier.class,supplierId);
 	}
+
+	public boolean updateSupp(Supplier supplier) {
+		try {
+			
+			//Supplier obj=getSession().get(Supplier.class,supplier.getSupplierId());
+			//System.out.println("obj : "+obj);
+			getSession().update(supplier);
+			return true;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public boolean deleteSupp(int supplierId) {
+		Supplier obj=(Supplier)getSession().get(Supplier.class, supplierId);
+		if(obj!=null){
+			getSession().delete(obj);
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	public List<Supplier> listSuppliers() {
+		@SuppressWarnings("unchecked")
+		TypedQuery<Supplier> query=getSession().createQuery("from com.shopping.snapdealbackend.dto.Supplier");
+		List<Supplier> list=query.getResultList();
+		System.out.println("List of Suppliers : "+list);
+		return list;	}
+
 }
