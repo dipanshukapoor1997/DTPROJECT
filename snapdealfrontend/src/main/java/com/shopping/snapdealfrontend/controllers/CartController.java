@@ -65,13 +65,14 @@ public class CartController {
 		Cart cartObj=cartDao.getCartByCustomer(userEmail);
 		
 		if(cartObj==null){
+			System.out.println("Cart Obj is null");
 			Cart cart=new Cart();
 			cart.setCustomerId(userEmail);
-			cart.setUser(userDao.getUserById(userEmail));
+		//	cart.setUser(userDao.getUserById(userEmail));
 			cartDao.addCart(cart);
 			
 			Item item=new Item();
-			item.setCart(cart);
+			item.setCart(cartDao.getCartByCustomer(userEmail));
 			item.setCustomerId(userEmail);
 			item.setPrice(productDao.getProductById(productId).getPrice());
 			item.setProduct(productDao.getProductById(productId));
@@ -81,7 +82,6 @@ public class CartController {
 			al.add(item);
 			cart.setItems(al);
 			
-			cartDao.addCart(cart);
 			itemDao.addItem(item);
 			System.out.println("Cart Created Succesfully");
 			

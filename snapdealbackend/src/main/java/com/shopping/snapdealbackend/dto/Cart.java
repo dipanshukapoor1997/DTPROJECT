@@ -2,52 +2,36 @@ package com.shopping.snapdealbackend.dto;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 
 @SuppressWarnings("unused")
+
 @Entity
 @Table(name="CartTable")
 public class Cart {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int cartId;
+	private String customerId;
 	
-	private int cardProductId; //productId fetched from product entity and put into cart entity
-	
-	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="userMailId")
-	private User cartUserDetails; //this object will be used in ur shipping.jsp
-	
-	
-	private double cartPrice; //product price added in cart
-	private int cartQuantity; //no. of products added in cart against a particular pid
-	private String cartImage; //product image in cart
-	private String cartProductName; //productname
-	private String status;
-	
-	public Cart(){
-		
-	}
-
-	public Cart(int cartId, int cardProductId, User cartUserDetails,
-			double cartPrice, int cartQuantity) {
-		super();
-		this.cartId = cartId;
-		this.cardProductId = cardProductId;
-		this.cartUserDetails = cartUserDetails;
-		this.cartPrice = cartPrice;
-		this.cartQuantity = cartQuantity;
-	}
+	/*@OneToOne
+	User user;
+	*/
+	@OneToMany(cascade=CascadeType.REMOVE,fetch=FetchType.EAGER,mappedBy="cart")
+	Collection<Item> items=new ArrayList<>();
 
 	public int getCartId() {
 		return cartId;
@@ -57,77 +41,29 @@ public class Cart {
 		this.cartId = cartId;
 	}
 
-	public int getCardProductId() {
-		return cardProductId;
+	public String getCustomerId() {
+		return customerId;
 	}
 
-	public void setCardProductId(int cardProductId) {
-		this.cardProductId = cardProductId;
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
 	}
 
-	public User getCartUserDetails() {
-		return cartUserDetails;
+	/*public User getUser() {
+		return user;
 	}
 
-	public void setCartUserDetails(User cartUserDetails) {
-		this.cartUserDetails = cartUserDetails;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
-	public double getCartPrice() {
-		return cartPrice;
+*/	public Collection<Item> getItems() {
+		return items;
 	}
 
-	public void setCartPrice(double cartPrice) {
-		this.cartPrice = cartPrice;
+	public void setItems(Collection<Item> items) {
+		this.items = items;
 	}
-
-	public int getCartQuantity() {
-		return cartQuantity;
-	}
-
-	public void setCartQuantity(int cartQuantity) {
-		this.cartQuantity = cartQuantity;
-	}
-
-	public String getCartImage() {
-		return cartImage;
-	}
-
-	public void setCartImage(String cartImage) {
-		this.cartImage = cartImage;
-	}
-
-	public String getCartProductName() {
-		return cartProductName;
-	}
-
-	public void setCartProductName(String cartProductName) {
-		this.cartProductName = cartProductName;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public void setCustomerId(String userEmail) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void setUser(User userById) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void setItems(ArrayList<Item> al) {
-		// TODO Auto-generated method stub
-		
-	}
-		
 	
 	
 }

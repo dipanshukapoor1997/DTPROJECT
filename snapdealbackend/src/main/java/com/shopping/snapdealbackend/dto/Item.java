@@ -26,6 +26,7 @@ public class Item {
 	private  Product product;
 	
 	@ManyToOne
+	@JoinColumn
 	private Cart cart;
 
 	public int getItemId() {

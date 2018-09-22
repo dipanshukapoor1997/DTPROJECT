@@ -1,5 +1,6 @@
 package com.shopping.snapdealbackend.daoimpl;
 
+
 import java.util.List;
 
 import org.hibernate.Query;
@@ -25,6 +26,7 @@ public class CartDAOImpl implements CartDAO {
 		Session session = sessionFactory.getCurrentSession();
 		try{
 			session.save(cart);
+			System.out.println("Cart Saved");
 			return true;
 		}
 		catch(Exception exception)
@@ -41,12 +43,12 @@ public class CartDAOImpl implements CartDAO {
 			Query query = session.createQuery("From Cart  where customerId = :CI");
 			query.setParameter("CI", customerId);
 			List<Cart> cartList = query.list();
-			/*if(cartList.isEmpty()){
+			if(cartList.isEmpty()){
 				return null;
-			}*/
-			/*else {*/
+			}
+			else {
 			return cartList.get(0);
-			/*}*/
+			}
 		}
 		catch(Exception e){
 			System.out.println(e);
